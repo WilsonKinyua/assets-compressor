@@ -22,12 +22,12 @@ export interface CompressionOptions {
 }
 
 export const DEFAULT_COMPRESSION_OPTIONS: CompressionOptions = {
-  maxSizeMB: 1,
-  maxWidthOrHeight: 1920,
+  maxSizeMB: 0.09, // Target 90KB (below 100KB)
+  maxWidthOrHeight: 1200, // Reduced from 1920 for better compression
   useWebWorker: true,
-  fileType: 'image/webp',
-  initialQuality: 0.85,
-  maxIteration: 10,
+  fileType: 'image/webp', // Best compression ratio
+  initialQuality: 1.0, // Start at 100% quality
+  maxIteration: 15, // More iterations for aggressive compression
   preserveExif: false,
 };
 

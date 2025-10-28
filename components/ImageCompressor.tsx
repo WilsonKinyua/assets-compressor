@@ -130,10 +130,15 @@ export default function ImageCompressor() {
           <h1 className="text-4xl font-bold text-gray-900 mb-4">
             SEO Image Compressor
           </h1>
-          <p className="text-lg text-gray-600 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-600 max-w-2xl mx-auto mb-3">
             Compress and optimize your images for web without losing quality. Perfect for SEO and
             faster page loads.
           </p>
+          <div className="inline-flex items-center px-4 py-2 bg-blue-50 border border-blue-200 rounded-lg">
+            <span className="text-sm font-medium text-blue-800">
+              ✨ Default: Targets &lt;100KB with 100% quality | WebP format | 1200px max
+            </span>
+          </div>
         </div>
 
         {/* Compression Settings */}

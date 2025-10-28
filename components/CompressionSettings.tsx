@@ -113,6 +113,7 @@ export default function CompressionSettings({
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
               <option value="0.05">50 KB (Ultra Compression)</option>
+              <option value="0.09">90 KB (Default - High Quality)</option>
               <option value="0.1">100 KB (Very High Compression)</option>
               <option value="0.2">200 KB (High Compression)</option>
               <option value="0.3">300 KB</option>
