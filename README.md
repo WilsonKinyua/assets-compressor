@@ -64,9 +64,22 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 - **Quality**: 10-100% (default: 85%)
 - **Max Dimensions**: Up to 4000px (default: 1920px)
-- **Target File Size**: 500KB, 1MB, 2MB, or 5MB
+- **Target File Size**: 50KB, 100KB, 200KB, 300KB, 400KB, 500KB, 1MB, 2MB, or 5MB
+- **Compression Iterations**: 5-20 iterations (default: 10)
 - **Output Format**: WebP (recommended), JPEG, or PNG
 - **EXIF Preservation**: Optional metadata preservation
+
+### 🎯 Achieving Very Small File Sizes (50-100KB)
+
+To compress images to 100KB or smaller while maintaining acceptable quality:
+
+1. **Select Target Size**: Choose 50KB or 100KB from the "Target Max File Size" dropdown
+2. **Reduce Dimensions**: Set "Max Width/Height" to 800-1000px for better compression
+3. **Increase Iterations**: Set compression iterations to 15-20 for more aggressive compression
+4. **Use WebP Format**: WebP provides the best compression ratio
+5. **Adjust Quality**: Start with 80-100% quality; the library will automatically reduce it through iterations to meet your target size
+
+**Note**: The compression library automatically adjusts quality through multiple iterations to reach your target file size. The initial quality setting is just a starting point.
 
 ## Supported Formats
 

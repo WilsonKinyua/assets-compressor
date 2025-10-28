@@ -17,6 +17,7 @@ export interface CompressionOptions {
   useWebWorker: boolean;
   fileType: 'image/webp' | 'image/jpeg' | 'image/png';
   initialQuality: number;
+  maxIteration?: number;
   preserveExif?: boolean;
 }
 
@@ -26,6 +27,7 @@ export const DEFAULT_COMPRESSION_OPTIONS: CompressionOptions = {
   useWebWorker: true,
   fileType: 'image/webp',
   initialQuality: 0.85,
+  maxIteration: 10,
   preserveExif: false,
 };
 

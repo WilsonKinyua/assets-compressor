@@ -11,6 +11,7 @@ export async function compressImage(
     useWebWorker: options.useWebWorker,
     fileType: options.fileType,
     initialQuality: options.initialQuality,
+    maxIteration: options.maxIteration || 10,
   };
 
   try {

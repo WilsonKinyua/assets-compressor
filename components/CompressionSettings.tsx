@@ -39,6 +39,11 @@ export default function CompressionSettings({
     onOptionsChange({ ...options, preserveExif: e.target.checked });
   };
 
+  const handleMaxIterationChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const maxIteration = parseInt(e.target.value);
+    onOptionsChange({ ...options, maxIteration });
+  };
+
   return (
     <div className="bg-white rounded-xl shadow-lg border border-gray-200">
       {/* Header */}
@@ -107,13 +112,36 @@ export default function CompressionSettings({
               onChange={handleMaxSizeChange}
               className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
             >
+              <option value="0.05">50 KB (Ultra Compression)</option>
+              <option value="0.1">100 KB (Very High Compression)</option>
+              <option value="0.2">200 KB (High Compression)</option>
+              <option value="0.3">300 KB</option>
+              <option value="0.4">400 KB</option>
               <option value="0.5">500 KB</option>
               <option value="1">1 MB</option>
               <option value="2">2 MB</option>
               <option value="5">5 MB</option>
             </select>
             <p className="text-xs text-gray-500">
-              Compression will attempt to reach this target size
+              The library will automatically adjust quality through multiple iterations to reach this target. For smaller sizes (50-100KB), consider reducing dimensions below 1000px.
+            </p>
+          </div>
+
+          {/* Max Iteration */}
+          <div className="space-y-2">
+            <label className="block text-sm font-medium text-gray-700">
+              Compression Iterations: {options.maxIteration || 10}
+            </label>
+            <input
+              type="range"
+              min="5"
+              max="20"
+              value={options.maxIteration || 10}
+              onChange={handleMaxIterationChange}
+              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
+            />
+            <p className="text-xs text-gray-500">
+              More iterations = better chance of reaching target file size. Recommended: 10-15 for small targets (50-100KB)
             </p>
           </div>
 
