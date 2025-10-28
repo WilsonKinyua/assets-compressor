@@ -2,7 +2,7 @@
 
 import { useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
-import { Upload, Image as ImageIcon } from 'lucide-react';
+import { Upload, Sparkles } from 'lucide-react';
 import { ACCEPTED_FILE_TYPES, MAX_FILE_SIZE_MB } from '@/types/image';
 import { validateFileType, validateFileSize } from '@/lib/fileUtils';
 
@@ -44,49 +44,63 @@ export default function DropZone({ onFilesSelected, disabled }: DropZoneProps) {
     <div
       {...getRootProps()}
       className={`
-        relative rounded-xl border-2 border-dashed p-12 text-center
-        transition-all duration-300 cursor-pointer
+        relative glass-strong rounded-2xl border-2 border-dashed p-16 text-center
+        transition-all duration-300 cursor-pointer overflow-hidden group
         ${
           isDragActive
-            ? 'border-blue-500 bg-blue-50 scale-[1.02]'
-            : 'border-gray-300 bg-white hover:border-blue-400 hover:bg-blue-50/50'
+            ? 'border-primary-400 bg-primary-50/50 scale-[1.02] shadow-2xl'
+            : 'border-white/30 hover:border-primary-300 hover:shadow-xl'
         }
         ${disabled ? 'opacity-50 cursor-not-allowed' : ''}
       `}
     >
       <input {...getInputProps()} />
 
-      <div className="flex flex-col items-center justify-center space-y-4">
-        <div
-          className={`
-          rounded-full p-6 transition-all duration-300
-          ${isDragActive ? 'bg-blue-100 scale-110' : 'bg-gray-100'}
-        `}
-        >
-          {isDragActive ? (
-            <Upload className="h-12 w-12 text-blue-600 animate-bounce" />
-          ) : (
-            <ImageIcon className="h-12 w-12 text-gray-600" />
-          )}
+      {/* Background gradient effect */}
+      <div className="absolute inset-0 bg-gradient-to-br from-primary-500/5 via-transparent to-primary-700/5 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+
+      <div className="relative flex flex-col items-center justify-center space-y-6">
+        {/* Icon */}
+        <div className="relative">
+          <div className="absolute inset-0 bg-primary-400/20 rounded-full blur-2xl animate-pulse"></div>
+          <div
+            className={`
+            relative rounded-full p-8 transition-all duration-300
+            ${isDragActive ? 'bg-primary-100 scale-110' : 'bg-primary-50 group-hover:bg-primary-100'}
+          `}
+          >
+            {isDragActive ? (
+              <Upload className="h-16 w-16 text-primary-600 animate-bounce" />
+            ) : (
+              <Sparkles className="h-16 w-16 text-primary-600 group-hover:animate-bounce-subtle" />
+            )}
+          </div>
         </div>
 
-        <div className="space-y-2">
-          <h3 className="text-xl font-semibold text-gray-900">
-            {isDragActive ? 'Drop your images here' : 'Drag & drop images here'}
+        {/* Text */}
+        <div className="space-y-3">
+          <h3 className="text-2xl font-bold text-gray-900">
+            {isDragActive ? '✨ Drop your images here' : 'Drop images or click to upload'}
           </h3>
-          <p className="text-sm text-gray-600">
-            or click to browse your files
+          <p className="text-base text-gray-600">
+            Drag & drop anywhere on the page or click to browse
           </p>
         </div>
 
-        <div className="text-xs text-gray-500 space-y-1">
-          <p>Supported formats: JPEG, PNG, WebP, GIF, BMP</p>
-          <p>Maximum file size: {MAX_FILE_SIZE_MB}MB per file</p>
+        {/* Info badges */}
+        <div className="flex flex-wrap items-center justify-center gap-3 pt-4">
+          <div className="px-4 py-2 bg-white/60 backdrop-blur-sm rounded-full border border-primary-200/50">
+            <span className="text-xs font-medium text-gray-700">JPEG, PNG, WebP, GIF, BMP</span>
+          </div>
+          <div className="px-4 py-2 bg-white/60 backdrop-blur-sm rounded-full border border-primary-200/50">
+            <span className="text-xs font-medium text-gray-700">Max {MAX_FILE_SIZE_MB}MB per file</span>
+          </div>
         </div>
       </div>
 
+      {/* Active state overlay */}
       {isDragActive && (
-        <div className="absolute inset-0 rounded-xl bg-blue-500 bg-opacity-10 pointer-events-none" />
+        <div className="absolute inset-0 rounded-2xl bg-gradient-to-br from-primary-500/10 to-primary-700/10 pointer-events-none animate-fade-in" />
       )}
     </div>
   );
