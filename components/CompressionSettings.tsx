@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { ChevronDown, ChevronUp, Settings } from 'lucide-react';
+import { ChevronDown, ChevronUp, Sliders } from 'lucide-react';
 import { CompressionOptions } from '@/types/image';
 
 interface CompressionSettingsProps {
@@ -45,138 +45,159 @@ export default function CompressionSettings({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-lg border border-gray-200">
+    <div className="glass-strong rounded-2xl overflow-hidden shadow-lg">
       {/* Header */}
       <button
         onClick={() => setIsExpanded(!isExpanded)}
-        className="w-full flex items-center justify-between p-4 hover:bg-gray-50 transition-colors duration-200 rounded-xl"
+        className="w-full flex items-center justify-between p-5 hover:bg-white/50 transition-all duration-200 group"
       >
         <div className="flex items-center space-x-3">
-          <Settings className="h-5 w-5 text-gray-600" />
+          <div className="p-2 rounded-lg bg-primary-100 group-hover:bg-primary-200 transition-colors">
+            <Sliders className="h-5 w-5 text-primary-700" />
+          </div>
           <h3 className="text-lg font-semibold text-gray-900">Advanced Options</h3>
         </div>
-        {isExpanded ? (
-          <ChevronUp className="h-5 w-5 text-gray-600" />
-        ) : (
-          <ChevronDown className="h-5 w-5 text-gray-600" />
-        )}
+        <div className="flex items-center gap-2">
+          {!isExpanded && (
+            <span className="text-xs text-gray-500 mr-2">
+              {Math.round(options.initialQuality * 100)}% • {options.maxWidthOrHeight}px • {options.maxSizeMB < 1 ? `${options.maxSizeMB * 1000}KB` : `${options.maxSizeMB}MB`}
+            </span>
+          )}
+          {isExpanded ? (
+            <ChevronUp className="h-5 w-5 text-gray-600 group-hover:text-primary-600 transition-colors" />
+          ) : (
+            <ChevronDown className="h-5 w-5 text-gray-600 group-hover:text-primary-600 transition-colors" />
+          )}
+        </div>
       </button>
 
       {/* Settings Panel */}
       {isExpanded && (
-        <div className="p-6 pt-0 space-y-6 animate-fade-in">
-          {/* Quality Slider */}
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Quality: {Math.round(options.initialQuality * 100)}%
-            </label>
-            <input
-              type="range"
-              min="10"
-              max="100"
-              value={Math.round(options.initialQuality * 100)}
-              onChange={handleQualityChange}
-              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
-            />
-            <p className="text-xs text-gray-500">
-              Higher quality means larger file size
-            </p>
-          </div>
+        <div className="px-6 pb-6 space-y-6 animate-slide-up border-t border-white/30">
+          <div className="pt-6 grid grid-cols-1 md:grid-cols-2 gap-6">
+            {/* Quality Slider */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <label className="block text-sm font-semibold text-gray-800">
+                  Quality
+                </label>
+                <span className="text-sm font-bold text-primary-700">
+                  {Math.round(options.initialQuality * 100)}%
+                </span>
+              </div>
+              <input
+                type="range"
+                min="10"
+                max="100"
+                value={Math.round(options.initialQuality * 100)}
+                onChange={handleQualityChange}
+                className="w-full h-2 bg-gradient-to-r from-primary-200 to-primary-400 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary-600 [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:cursor-pointer hover:[&::-webkit-slider-thumb]:bg-primary-700"
+              />
+              <p className="text-xs text-gray-600">
+                Starting quality (auto-adjusts to meet target size)
+              </p>
+            </div>
 
-          {/* Max Width/Height */}
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Max Width/Height (px)
-            </label>
-            <input
-              type="number"
-              min="100"
-              max="4000"
-              step="100"
-              value={options.maxWidthOrHeight}
-              onChange={handleMaxWidthChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            />
-            <p className="text-xs text-gray-500">
-              Images will be resized to fit within this dimension
-            </p>
-          </div>
+            {/* Max Width/Height */}
+            <div className="space-y-3">
+              <label className="block text-sm font-semibold text-gray-800">
+                Max Dimensions (px)
+              </label>
+              <input
+                type="number"
+                min="100"
+                max="4000"
+                step="100"
+                value={options.maxWidthOrHeight}
+                onChange={handleMaxWidthChange}
+                className="w-full px-4 py-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white/50 backdrop-blur-sm font-semibold text-gray-900"
+              />
+              <p className="text-xs text-gray-600">
+                Images resized to fit within this dimension
+              </p>
+            </div>
 
-          {/* Max File Size */}
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Target Max File Size
-            </label>
-            <select
-              value={options.maxSizeMB}
-              onChange={handleMaxSizeChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              <option value="0.05">50 KB (Ultra Compression)</option>
-              <option value="0.09">90 KB (Default - High Quality)</option>
-              <option value="0.1">100 KB (Very High Compression)</option>
-              <option value="0.2">200 KB (High Compression)</option>
-              <option value="0.3">300 KB</option>
-              <option value="0.4">400 KB</option>
-              <option value="0.5">500 KB</option>
-              <option value="1">1 MB</option>
-              <option value="2">2 MB</option>
-              <option value="5">5 MB</option>
-            </select>
-            <p className="text-xs text-gray-500">
-              The library will automatically adjust quality through multiple iterations to reach this target. For smaller sizes (50-100KB), consider reducing dimensions below 1000px.
-            </p>
-          </div>
+            {/* Max File Size */}
+            <div className="space-y-3">
+              <label className="block text-sm font-semibold text-gray-800">
+                Target File Size
+              </label>
+              <select
+                value={options.maxSizeMB}
+                onChange={handleMaxSizeChange}
+                className="w-full px-4 py-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white/50 backdrop-blur-sm font-semibold text-gray-900 cursor-pointer"
+              >
+                <option value="0.05">50 KB (Ultra)</option>
+                <option value="0.09">90 KB (Default)</option>
+                <option value="0.1">100 KB</option>
+                <option value="0.2">200 KB</option>
+                <option value="0.3">300 KB</option>
+                <option value="0.4">400 KB</option>
+                <option value="0.5">500 KB</option>
+                <option value="1">1 MB</option>
+                <option value="2">2 MB</option>
+                <option value="5">5 MB</option>
+              </select>
+              <p className="text-xs text-gray-600">
+                Auto-adjusts quality through iterations
+              </p>
+            </div>
 
-          {/* Max Iteration */}
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Compression Iterations: {options.maxIteration || 10}
-            </label>
-            <input
-              type="range"
-              min="5"
-              max="20"
-              value={options.maxIteration || 10}
-              onChange={handleMaxIterationChange}
-              className="w-full h-2 bg-gray-200 rounded-lg appearance-none cursor-pointer accent-blue-600"
-            />
-            <p className="text-xs text-gray-500">
-              More iterations = better chance of reaching target file size. Recommended: 10-15 for small targets (50-100KB)
-            </p>
-          </div>
+            {/* Max Iteration */}
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <label className="block text-sm font-semibold text-gray-800">
+                  Iterations
+                </label>
+                <span className="text-sm font-bold text-primary-700">
+                  {options.maxIteration || 10}
+                </span>
+              </div>
+              <input
+                type="range"
+                min="5"
+                max="20"
+                value={options.maxIteration || 10}
+                onChange={handleMaxIterationChange}
+                className="w-full h-2 bg-gradient-to-r from-primary-200 to-primary-400 rounded-full appearance-none cursor-pointer [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:w-5 [&::-webkit-slider-thumb]:h-5 [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:bg-primary-600 [&::-webkit-slider-thumb]:shadow-lg [&::-webkit-slider-thumb]:cursor-pointer hover:[&::-webkit-slider-thumb]:bg-primary-700"
+              />
+              <p className="text-xs text-gray-600">
+                More = better compression (10-15 recommended)
+              </p>
+            </div>
 
-          {/* Output Format */}
-          <div className="space-y-2">
-            <label className="block text-sm font-medium text-gray-700">
-              Output Format
-            </label>
-            <select
-              value={options.fileType}
-              onChange={handleFormatChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-            >
-              <option value="image/webp">WebP (Best for SEO)</option>
-              <option value="image/jpeg">JPEG</option>
-              <option value="image/png">PNG</option>
-            </select>
-            <p className="text-xs text-gray-500">
-              WebP provides the best compression with quality
-            </p>
-          </div>
+            {/* Output Format */}
+            <div className="space-y-3">
+              <label className="block text-sm font-semibold text-gray-800">
+                Output Format
+              </label>
+              <select
+                value={options.fileType}
+                onChange={handleFormatChange}
+                className="w-full px-4 py-3 border border-primary-200 rounded-xl focus:ring-2 focus:ring-primary-500 focus:border-transparent bg-white/50 backdrop-blur-sm font-semibold text-gray-900 cursor-pointer"
+              >
+                <option value="image/webp">WebP (Best for SEO)</option>
+                <option value="image/jpeg">JPEG</option>
+                <option value="image/png">PNG</option>
+              </select>
+              <p className="text-xs text-gray-600">
+                WebP offers best compression ratio
+              </p>
+            </div>
 
-          {/* Preserve EXIF */}
-          <div className="flex items-center space-x-2">
-            <input
-              type="checkbox"
-              id="preserveExif"
-              checked={options.preserveExif || false}
-              onChange={handlePreserveExifChange}
-              className="h-4 w-4 text-blue-600 rounded border-gray-300 focus:ring-2 focus:ring-blue-500"
-            />
-            <label htmlFor="preserveExif" className="text-sm font-medium text-gray-700">
-              Preserve EXIF metadata
-            </label>
+            {/* Preserve EXIF */}
+            <div className="flex items-center space-x-3 p-4 bg-white/30 rounded-xl">
+              <input
+                type="checkbox"
+                id="preserveExif"
+                checked={options.preserveExif || false}
+                onChange={handlePreserveExifChange}
+                className="h-5 w-5 text-primary-600 rounded border-primary-300 focus:ring-2 focus:ring-primary-500 cursor-pointer"
+              />
+              <label htmlFor="preserveExif" className="text-sm font-medium text-gray-800 cursor-pointer">
+                Preserve EXIF metadata
+              </label>
+            </div>
           </div>
         </div>
       )}

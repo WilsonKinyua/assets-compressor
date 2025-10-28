@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { Download, Loader2 } from 'lucide-react';
+import { Download, Loader2, Package } from 'lucide-react';
 import { CompressedImage } from '@/types/image';
 import { downloadAllAsZip } from '@/lib/fileUtils';
 
@@ -37,7 +37,7 @@ export default function DownloadButton({ images }: DownloadButtonProps) {
     <button
       onClick={handleDownloadAll}
       disabled={isDownloading}
-      className="flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-blue-600 to-indigo-600 text-white rounded-xl hover:from-blue-700 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl disabled:opacity-50 disabled:cursor-not-allowed font-medium"
+      className="group flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 shadow-lg hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed font-semibold transform hover:scale-105"
     >
       {isDownloading ? (
         <>
@@ -46,7 +46,7 @@ export default function DownloadButton({ images }: DownloadButtonProps) {
         </>
       ) : (
         <>
-          <Download className="h-5 w-5" />
+          <Package className="h-5 w-5 group-hover:animate-bounce-subtle" />
           <span>Download All ({completedImages.length})</span>
         </>
       )}
