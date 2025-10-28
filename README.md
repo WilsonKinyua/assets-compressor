@@ -2,6 +2,11 @@
 
 A professional client-side image compression web application built with Next.js 14+, TypeScript, and Tailwind CSS.
 
+## 🚀 Quick Deploy
+
+[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/WilsonKinyua/image-compressor&branch=claude/session-011CUaBu8wRor2awrpTREMek)
+[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/WilsonKinyua/image-compressor)
+
 ## Features
 
 - **Drag & Drop Interface**: Upload multiple images at once with visual feedback
