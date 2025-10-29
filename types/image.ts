@@ -14,7 +14,6 @@ export interface CompressedImage {
 export interface CompressionOptions {
   maxSizeMB: number;
   maxWidthOrHeight: number;
-  useWebWorker: boolean;
   fileType: 'image/webp' | 'image/jpeg' | 'image/png';
   initialQuality: number;
   maxIteration?: number;
@@ -22,12 +21,11 @@ export interface CompressionOptions {
 }
 
 export const DEFAULT_COMPRESSION_OPTIONS: CompressionOptions = {
-  maxSizeMB: 0.09, // Target 90KB (below 100KB)
-  maxWidthOrHeight: 1200, // Reduced from 1920 for better compression
-  useWebWorker: true,
-  fileType: 'image/webp', // Best compression ratio
-  initialQuality: 1.0, // Start at 100% quality
-  maxIteration: 15, // More iterations for aggressive compression
+  maxSizeMB: 0.1, // Target 100KB - balanced quality and size
+  maxWidthOrHeight: 1920, // Full HD - preserves detail
+  fileType: 'image/webp', // Best compression with jSquash WebP encoder
+  initialQuality: 0.95, // 95% quality - jSquash MozJPEG preserves quality better
+  maxIteration: 10, // Conservative iterations with professional codecs
   preserveExif: false,
 };
 

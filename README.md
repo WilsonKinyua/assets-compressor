@@ -2,7 +2,7 @@
 
 A professional client-side image compression web application built with Next.js 14+, TypeScript, and Tailwind CSS.
 
-**✨ Optimized by Default**: Automatically compresses images to **less than 100KB** while starting with **100% quality**. The intelligent compression algorithm automatically adjusts quality through multiple iterations to achieve the perfect balance between file size and visual quality.
+**✨ Balanced Compression**: Automatically compresses images to **~100KB** while preserving excellent quality (95% starting quality, Full HD 1920px). Smart algorithm uses moderate iterations to achieve the perfect balance between file size and visual fidelity.
 
 ## 🚀 Quick Deploy
 
@@ -11,8 +11,8 @@ A professional client-side image compression web application built with Next.js 
 
 ## Features
 
-- **🎯 Smart Default Settings**: Automatically targets <100KB with 100% starting quality (90KB target, 1200px max dimension)
-- **Drag & Drop Interface**: Upload multiple images at once with visual feedback
+- **🎯 Balanced Smart Defaults**: Targets ~100KB with 95% quality, Full HD 1920px, 10 iterations - excellent quality preservation!
+- **Drag & Drop Anywhere**: Upload multiple images - drop anywhere on the page with visual feedback
 - **Advanced Compression**: Compress images to WebP, JPEG, or PNG format with customizable settings
 - **Real-time Processing**: Process multiple images simultaneously using Web Workers
 - **Side-by-side Comparison**: Preview original and compressed images
@@ -65,32 +65,40 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 
 ## Compression Settings
 
-### Default Settings (Works Out-of-the-Box)
-- **Quality**: 100% starting quality
-- **Target File Size**: 90KB (below 100KB)
-- **Max Dimensions**: 1200px
-- **Compression Iterations**: 15 iterations
-- **Output Format**: WebP (best compression)
+### 🎯 Balanced Default Settings (Works Out-of-the-Box)
+Our defaults are carefully tuned for the perfect balance of quality and file size:
+
+- **Quality**: 95% starting quality (prevents over-compression)
+- **Target File Size**: 100KB (sweet spot for web use)
+- **Max Dimensions**: 1920px Full HD (preserves detail)
+- **Compression Iterations**: 10 iterations (moderate, quality-preserving)
+- **Output Format**: WebP (best compression ratio)
+
+**Why these settings work:** Starting at 95% instead of 100% gives the algorithm room to optimize without dramatic quality loss. Full HD dimensions preserve image detail. Fewer iterations (10 vs 15) means less aggressive quality reduction.
 
 ### Customizable Options (Advanced Settings)
-- **Quality**: 10-100% (default: 100%)
-- **Max Dimensions**: Up to 4000px (default: 1200px)
+- **Quality**: 10-100% (default: 95%)
+- **Max Dimensions**: Up to 4000px (default: 1920px)
 - **Target File Size**: 50KB, 90KB, 100KB, 200KB, 300KB, 400KB, 500KB, 1MB, 2MB, or 5MB
-- **Compression Iterations**: 5-20 iterations (default: 15)
+- **Compression Iterations**: 5-20 iterations (default: 10)
 - **Output Format**: WebP (recommended), JPEG, or PNG
 - **EXIF Preservation**: Optional metadata preservation
 
-### 🎯 Achieving Very Small File Sizes (50-100KB)
+### 💡 Recommended Settings by Goal
 
-To compress images to 100KB or smaller while maintaining acceptable quality:
+**Balanced (Default - Recommended):**
+- Quality: 95%, Target: 100KB, Dimensions: 1920px, Iterations: 10
+- Perfect balance of quality and file size
 
-1. **Select Target Size**: Choose 50KB or 100KB from the "Target Max File Size" dropdown
-2. **Reduce Dimensions**: Set "Max Width/Height" to 800-1000px for better compression
-3. **Increase Iterations**: Set compression iterations to 15-20 for more aggressive compression
-4. **Use WebP Format**: WebP provides the best compression ratio
-5. **Adjust Quality**: Start with 80-100% quality; the library will automatically reduce it through iterations to meet your target size
+**Maximum Quality:**
+- Quality: 100%, Target: 500KB-1MB, Dimensions: 1920-4000px, Iterations: 5-10
+- Best for professional photography
 
-**Note**: The compression library automatically adjusts quality through multiple iterations to reach your target file size. The initial quality setting is just a starting point.
+**Ultra Small Files:**
+- Quality: 85-95%, Target: 50-90KB, Dimensions: 800-1200px, Iterations: 15-20
+- Best for thumbnails and previews
+
+**Note**: The compression library automatically adjusts quality through iterations to reach your target. Higher iterations = more aggressive quality reduction.
 
 ## Supported Formats
 
