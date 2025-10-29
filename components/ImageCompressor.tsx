@@ -203,7 +203,7 @@ export default function ImageCompressor() {
               Compress<span className="text-primary-200">Pro</span>
             </h1>
             <p className="text-xl text-white/80 max-w-2xl mx-auto mb-6">
-              Professional image compression with excellent quality preservation. Drop anywhere, compress instantly.
+              Professional image compression powered by AI. Drop anywhere, compress instantly.
             </p>
 
             {/* Feature Badges */}
@@ -217,7 +217,7 @@ export default function ImageCompressor() {
               <div className="glass px-4 py-2 rounded-full">
                 <div className="flex items-center gap-2 text-white">
                   <Sparkles className="w-4 h-4" />
-                  <span className="text-sm font-medium">Quality Preserved</span>
+                  <span className="text-sm font-medium">&lt;100KB Target</span>
                 </div>
               </div>
               <div className="glass px-4 py-2 rounded-full">
