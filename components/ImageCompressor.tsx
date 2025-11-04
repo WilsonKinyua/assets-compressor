@@ -1,10 +1,11 @@
 'use client';
 
 import { useState, useCallback, useEffect } from 'react';
-import { Sparkles, Zap, Shield } from 'lucide-react';
-import DropZone from './DropZone';
+import { Upload } from 'lucide-react';
+import Header from './Header';
+import Footer from './Footer';
+import QualitySlider from './QualitySlider';
 import ImageCard from './ImageCard';
-import CompressionSettings from './CompressionSettings';
 import DownloadButton from './DownloadButton';
 import { CompressedImage, CompressionOptions, DEFAULT_COMPRESSION_OPTIONS } from '@/types/image';
 import { compressImage, formatFileSize } from '@/lib/imageCompression';
@@ -27,57 +28,6 @@ export default function ImageCompressor() {
     };
   }, [images]);
 
-  // Full-page drag and drop handlers
-  useEffect(() => {
-    const handleDragOver = (e: DragEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      if (e.dataTransfer?.types.includes('Files')) {
-        setIsDraggingOver(true);
-      }
-    };
-
-    const handleDragLeave = (e: DragEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      if (e.target === document.body || e.target === document.documentElement) {
-        setIsDraggingOver(false);
-      }
-    };
-
-    const handleDrop = async (e: DragEvent) => {
-      e.preventDefault();
-      e.stopPropagation();
-      setIsDraggingOver(false);
-
-      const files = Array.from(e.dataTransfer?.files || []);
-      const validFiles = files.filter((file) => {
-        if (!validateFileType(file)) {
-          alert(`${file.name} is not a supported image format`);
-          return false;
-        }
-        if (!validateFileSize(file, MAX_FILE_SIZE_MB)) {
-          alert(`${file.name} exceeds the maximum file size of ${MAX_FILE_SIZE_MB}MB`);
-          return false;
-        }
-        return true;
-      });
-
-      if (validFiles.length > 0) {
-        await handleFilesSelected(validFiles);
-      }
-    };
-
-    document.addEventListener('dragover', handleDragOver);
-    document.addEventListener('dragleave', handleDragLeave);
-    document.addEventListener('drop', handleDrop);
-
-    return () => {
-      document.removeEventListener('dragover', handleDragOver);
-      document.removeEventListener('dragleave', handleDragLeave);
-      document.removeEventListener('drop', handleDrop);
-    };
-  }, [options]);
 
   const handleFilesSelected = useCallback(
     async (files: File[]) => {
@@ -170,137 +120,186 @@ export default function ImageCompressor() {
       ? Math.round(((totalOriginalSize - totalCompressedSize) / totalOriginalSize) * 100)
       : 0;
 
+  const handleQualityChange = (quality: number) => {
+    setOptions({ ...options, initialQuality: quality / 100 });
+  };
+
+  const handleFileInputChange = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    await handleFilesSelected(files);
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDraggingOver(true);
+  };
+
+  const handleDragLeave = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDraggingOver(false);
+  };
+
+  const handleDropFiles = async (e: React.DragEvent) => {
+    e.preventDefault();
+    e.stopPropagation();
+    setIsDraggingOver(false);
+
+    const files = Array.from(e.dataTransfer?.files || []);
+    const validFiles = files.filter((file) => {
+      if (!validateFileType(file)) {
+        alert(`${file.name} is not a supported image format`);
+        return false;
+      }
+      if (!validateFileSize(file, MAX_FILE_SIZE_MB)) {
+        alert(`${file.name} exceeds the maximum file size of ${MAX_FILE_SIZE_MB}MB`);
+        return false;
+      }
+      return true;
+    });
+
+    if (validFiles.length > 0) {
+      await handleFilesSelected(validFiles);
+    }
+  };
+
+  const completedImages = images.filter((img) => img.status === 'completed').length;
+
   return (
-    <>
-      {/* Full-page drag overlay */}
-      {isDraggingOver && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-primary-950/90 backdrop-blur-md animate-fade-in">
-          <div className="text-center">
-            <div className="mb-6 inline-flex items-center justify-center w-32 h-32 rounded-full bg-white/10 border-4 border-dashed border-white/50 animate-bounce-subtle">
-              <Sparkles className="w-16 h-16 text-white" />
-            </div>
-            <h2 className="text-4xl font-bold text-white mb-2">Drop your images anywhere!</h2>
-            <p className="text-xl text-white/80">We'll compress them instantly</p>
+    <div className="min-h-screen flex flex-col bg-gray-50">
+      <Header />
+
+      <main className="flex-1">
+        {/* Hero Section */}
+        <div className="bg-white border-b border-gray-200">
+          <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12 text-center">
+            <h1 className="text-4xl md:text-5xl font-bold text-gray-900 mb-4">
+              Fast & Efficient Image Compression
+            </h1>
+            <p className="text-lg text-gray-600 max-w-3xl mx-auto mb-2">
+              BlazTools offering Powerful, Fast and Efficient Image Compressor to Optimize and
+              Reduce image file sizes without losing quality.
+            </p>
+            <p className="text-sm text-gray-500">
+              Allowed: JPG, PNG, JPEG, GIF, WEBP, JFIF
+            </p>
           </div>
         </div>
-      )}
 
-      <div className="min-h-screen py-8 px-4 sm:px-6 lg:px-8">
-        <div className="max-w-7xl mx-auto">
-          {/* Hero Section */}
-          <div className="text-center mb-12 animate-scale-in">
-            {/* Logo */}
-            <div className="inline-flex items-center justify-center mb-6">
-              <div className="relative">
-                <div className="absolute inset-0 bg-white/20 rounded-full blur-xl"></div>
-                <div className="relative bg-white/10 backdrop-blur-lg rounded-full p-6 border border-white/20">
-                  <Zap className="h-12 w-12 text-white animate-float" />
-                </div>
-              </div>
-            </div>
-
-            <h1 className="text-5xl md:text-6xl font-bold text-white mb-4 tracking-tight">
-              Compress<span className="text-primary-200">Pro</span>
-            </h1>
-            <p className="text-xl text-white/80 max-w-2xl mx-auto mb-6">
-              Professional image compression powered by AI. Drop anywhere, compress instantly.
-            </p>
-
-            {/* Feature Badges */}
-            <div className="flex flex-wrap items-center justify-center gap-4 mb-8">
-              <div className="glass px-4 py-2 rounded-full">
-                <div className="flex items-center gap-2 text-white">
-                  <Shield className="w-4 h-4" />
-                  <span className="text-sm font-medium">100% Client-Side</span>
-                </div>
-              </div>
-              <div className="glass px-4 py-2 rounded-full">
-                <div className="flex items-center gap-2 text-white">
-                  <Sparkles className="w-4 h-4" />
-                  <span className="text-sm font-medium">&lt;100KB Target</span>
-                </div>
-              </div>
-              <div className="glass px-4 py-2 rounded-full">
-                <div className="flex items-center gap-2 text-white">
-                  <Zap className="w-4 h-4" />
-                  <span className="text-sm font-medium">WebP Format</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Compression Settings */}
-          <div className="mb-8 animate-slide-up">
-            <CompressionSettings options={options} onOptionsChange={setOptions} />
-          </div>
-
-          {/* Drop Zone */}
+        {/* Main Content */}
+        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+          {/* Upload Zone - Only show when no images */}
           {images.length === 0 && (
-            <div className="mb-8 animate-scale-in">
-              <DropZone onFilesSelected={handleFilesSelected} disabled={isCompressing} />
+            <div
+              onDragOver={handleDragOver}
+              onDragLeave={handleDragLeave}
+              onDrop={handleDropFiles}
+              className={`relative mb-8 border-2 border-dashed rounded-lg p-20 text-center transition-all ${
+                isDraggingOver
+                  ? 'border-teal-400 bg-teal-50'
+                  : 'border-gray-300 bg-white hover:border-gray-400'
+              }`}
+            >
+              <input
+                type="file"
+                id="file-input"
+                multiple
+                accept="image/*"
+                onChange={handleFileInputChange}
+                className="hidden"
+              />
+              <label htmlFor="file-input" className="cursor-pointer">
+                <div className="flex flex-col items-center justify-center space-y-4">
+                  <div className="w-16 h-16 rounded-lg border-2 border-gray-300 flex items-center justify-center">
+                    <Upload className="w-8 h-8 text-gray-400" />
+                  </div>
+                  <p className="text-lg font-medium text-gray-700">
+                    Choose a Image or drag it here.
+                  </p>
+                </div>
+              </label>
             </div>
           )}
 
-          {/* Summary Stats */}
-          {images.length > 0 && (
-            <div className="mb-8 glass-strong rounded-2xl p-6 animate-slide-up">
-              <div className="flex flex-col md:flex-row items-center justify-between gap-4">
-                <div className="flex flex-wrap items-center gap-6 text-sm">
-                  <div>
-                    <span className="text-gray-600">Images: </span>
-                    <span className="font-bold text-2xl text-primary-700">{images.length}</span>
-                  </div>
-                  <div className="h-8 w-px bg-gray-300"></div>
-                  <div>
-                    <span className="text-gray-600">Original: </span>
-                    <span className="font-semibold text-gray-900">
-                      {formatFileSize(totalOriginalSize)}
-                    </span>
-                  </div>
-                  <div className="h-8 w-px bg-gray-300"></div>
-                  <div>
-                    <span className="text-gray-600">Compressed: </span>
-                    <span className="font-semibold text-gray-900">
-                      {formatFileSize(totalCompressedSize)}
-                    </span>
-                  </div>
-                  <div className="h-8 w-px bg-gray-300"></div>
-                  <div>
-                    <span className="text-gray-600">Saved: </span>
-                    <span className="font-bold text-2xl text-green-600">{totalSavings}%</span>
-                  </div>
-                </div>
+          {/* Quality Slider - Show when no images */}
+          {images.length === 0 && (
+            <QualitySlider
+              value={Math.round(options.initialQuality * 100)}
+              onChange={handleQualityChange}
+            />
+          )}
 
-                <div className="flex items-center gap-4">
+          {/* Images Grid */}
+          {images.length > 0 && (
+            <>
+              <div className="mb-8 flex items-center justify-between">
+                <div>
+                  <h2 className="text-2xl font-bold text-gray-900">
+                    Compressed Images ({completedImages}/{images.length})
+                  </h2>
+                  <p className="text-sm text-gray-600 mt-1">
+                    Total Saved: {formatFileSize(totalOriginalSize - totalCompressedSize)} (
+                    {totalSavings}%)
+                  </p>
+                </div>
+                <div className="flex items-center gap-3">
                   <DownloadButton images={images} />
                   <button
                     onClick={handleClearAll}
-                    className="px-6 py-3 bg-white/10 backdrop-blur-sm text-white rounded-xl hover:bg-white/20 transition-all duration-200 font-medium border border-white/20"
+                    className="px-4 py-2 bg-gray-200 text-gray-700 font-medium rounded-lg hover:bg-gray-300 transition-colors"
                   >
                     Clear All
                   </button>
                 </div>
               </div>
-            </div>
-          )}
 
-          {/* Image Grid */}
-          {images.length > 0 && (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-              {images.map((image) => (
-                <ImageCard key={image.id} image={image} />
-              ))}
-            </div>
-          )}
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+                {images.map((image) => (
+                  <ImageCard key={image.id} image={image} />
+                ))}
+              </div>
 
-          {/* Add more images button */}
-          {images.length > 0 && (
-            <div className="text-center">
-              <DropZone onFilesSelected={handleFilesSelected} disabled={isCompressing} />
-            </div>
+              {/* Add More Button */}
+              <div className="text-center">
+                <div
+                  onDragOver={handleDragOver}
+                  onDragLeave={handleDragLeave}
+                  onDrop={handleDropFiles}
+                  className="relative inline-block"
+                >
+                  <input
+                    type="file"
+                    id="file-input-more"
+                    multiple
+                    accept="image/*"
+                    onChange={handleFileInputChange}
+                    className="hidden"
+                  />
+                  <label
+                    htmlFor="file-input-more"
+                    className="inline-flex items-center gap-2 px-6 py-3 bg-teal-400 text-white font-medium rounded-lg hover:bg-teal-500 transition-colors cursor-pointer"
+                  >
+                    <Upload className="w-5 h-5" />
+                    Add More Images
+                  </label>
+                </div>
+              </div>
+            </>
           )}
         </div>
+      </main>
+
+      {/* Footer with stats */}
+      <div className="bg-white border-t border-gray-200 py-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <p className="text-sm text-gray-600">
+            Total Compressed: <span className="font-bold text-gray-900">{completedImages}</span>
+          </p>
+        </div>
       </div>
-    </>
+
+      <Footer />
+    </div>
   );
 }
