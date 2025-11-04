@@ -4,11 +4,6 @@ A professional client-side image compression web application built with Next.js 
 
 **✨ Balanced Compression**: Automatically compresses images to **~100KB** while preserving excellent quality (95% starting quality, Full HD 1920px). Smart algorithm uses moderate iterations to achieve the perfect balance between file size and visual fidelity.
 
-## 🚀 Quick Deploy
-
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https://github.com/WilsonKinyua/image-compressor&branch=claude/session-011CUaBu8wRor2awrpTREMek)
-[![Deploy to Netlify](https://www.netlify.com/img/deploy/button.svg)](https://app.netlify.com/start/deploy?repository=https://github.com/WilsonKinyua/image-compressor)
-
 ## Features
 
 - **🎯 Balanced Smart Defaults**: Targets ~100KB with 95% quality, Full HD 1920px, 10 iterations - excellent quality preservation!
@@ -66,6 +61,7 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 ## Compression Settings
 
 ### 🎯 Balanced Default Settings (Works Out-of-the-Box)
+
 Our defaults are carefully tuned for the perfect balance of quality and file size:
 
 - **Quality**: 95% starting quality (prevents over-compression)
@@ -77,6 +73,7 @@ Our defaults are carefully tuned for the perfect balance of quality and file siz
 **Why these settings work:** Starting at 95% instead of 100% gives the algorithm room to optimize without dramatic quality loss. Full HD dimensions preserve image detail. Fewer iterations (10 vs 15) means less aggressive quality reduction.
 
 ### Customizable Options (Advanced Settings)
+
 - **Quality**: 10-100% (default: 95%)
 - **Max Dimensions**: Up to 4000px (default: 1920px)
 - **Target File Size**: 50KB, 90KB, 100KB, 200KB, 300KB, 400KB, 500KB, 1MB, 2MB, or 5MB
@@ -87,14 +84,17 @@ Our defaults are carefully tuned for the perfect balance of quality and file siz
 ### 💡 Recommended Settings by Goal
 
 **Balanced (Default - Recommended):**
+
 - Quality: 95%, Target: 100KB, Dimensions: 1920px, Iterations: 10
 - Perfect balance of quality and file size
 
 **Maximum Quality:**
+
 - Quality: 100%, Target: 500KB-1MB, Dimensions: 1920-4000px, Iterations: 5-10
 - Best for professional photography
 
 **Ultra Small Files:**
+
 - Quality: 85-95%, Target: 50-90KB, Dimensions: 800-1200px, Iterations: 15-20
 - Best for thumbnails and previews
 
@@ -123,6 +123,7 @@ Our defaults are carefully tuned for the perfect balance of quality and file siz
 ## Browser Support
 
 Works on all modern browsers that support:
+
 - Web Workers
 - File API
 - Drag and Drop API
