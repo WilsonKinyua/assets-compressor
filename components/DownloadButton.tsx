@@ -37,7 +37,7 @@ export default function DownloadButton({ images }: DownloadButtonProps) {
     <button
       onClick={handleDownloadAll}
       disabled={isDownloading}
-      className="group flex items-center space-x-2 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 shadow-lg hover:shadow-2xl disabled:opacity-50 disabled:cursor-not-allowed font-semibold transform hover:scale-105"
+      className="flex items-center gap-2 px-5 py-2.5 bg-teal-700 text-white font-medium rounded-lg hover:bg-teal-800 transition-colors disabled:opacity-50 disabled:cursor-not-allowed focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-teal-600 focus-visible:ring-offset-2"
     >
       {isDownloading ? (
         <>
@@ -46,7 +46,7 @@ export default function DownloadButton({ images }: DownloadButtonProps) {
         </>
       ) : (
         <>
-          <Package className="h-5 w-5 group-hover:animate-bounce-subtle" />
+          <Package className="h-5 w-5" />
           <span>Download All ({completedImages.length})</span>
         </>
       )}

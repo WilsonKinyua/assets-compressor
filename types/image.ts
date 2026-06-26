@@ -12,7 +12,9 @@ export interface CompressedImage {
 }
 
 export interface CompressionOptions {
-  maxSizeMB: number;
+  // Optional size target. When set, quality is reduced over several passes to
+  // fit within it. When omitted, the image is encoded once at `initialQuality`.
+  maxSizeMB?: number;
   maxWidthOrHeight: number;
   fileType: 'image/webp' | 'image/jpeg' | 'image/png';
   initialQuality: number;
@@ -21,11 +23,9 @@ export interface CompressionOptions {
 }
 
 export const DEFAULT_COMPRESSION_OPTIONS: CompressionOptions = {
-  maxSizeMB: 0.1, // Target 100KB - balanced quality and size
   maxWidthOrHeight: 1920, // Full HD - preserves detail
   fileType: 'image/webp', // Best compression with jSquash WebP encoder
-  initialQuality: 0.95, // 95% quality - jSquash MozJPEG preserves quality better
-  maxIteration: 10, // Conservative iterations with professional codecs
+  initialQuality: 0.8, // Balanced default; the slider moves this directly
   preserveExif: false,
 };
 

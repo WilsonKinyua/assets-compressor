@@ -126,34 +126,19 @@ export async function compressImage(
       newDimensions.height
     );
 
-    // Target size in bytes
-    const targetSizeBytes = options.maxSizeMB * 1024 * 1024;
-    const maxIterations = options.maxIteration || 10;
     let quality = options.initialQuality;
-    let compressed: Uint8Array | null = null;
+    let compressed = await encodeImage(imageData, options.fileType, quality);
 
-    // Iteratively compress to hit target size
-    for (let i = 0; i < maxIterations; i++) {
-      compressed = await encodeImage(imageData, options.fileType, quality);
+    // When a size target is set, step quality down over a few passes to fit it.
+    if (options.maxSizeMB) {
+      const targetSizeBytes = options.maxSizeMB * 1024 * 1024;
+      const maxIterations = options.maxIteration || 10;
 
-      // Check if we've hit the target
-      if (compressed.length <= targetSizeBytes) {
-        break;
+      for (let i = 1; i < maxIterations && compressed.length > targetSizeBytes; i++) {
+        const compressionRatio = targetSizeBytes / compressed.length;
+        quality = Math.max(0.1, quality * Math.sqrt(compressionRatio) * 0.9);
+        compressed = await encodeImage(imageData, options.fileType, quality);
       }
-
-      // If we're on the last iteration, use this result anyway
-      if (i === maxIterations - 1) {
-        break;
-      }
-
-      // Reduce quality for next iteration (more conservative reduction)
-      // This is gentler than browser-image-compression's approach
-      const compressionRatio = targetSizeBytes / compressed.length;
-      quality = Math.max(0.1, quality * Math.sqrt(compressionRatio) * 0.9);
-    }
-
-    if (!compressed) {
-      throw new Error('Failed to compress image');
     }
 
     // Convert Uint8Array to Blob
@@ -165,7 +150,7 @@ export async function compressImage(
 }
 
 export function formatFileSize(bytes: number): string {
-  if (bytes === 0) return '0 Bytes';
+  if (bytes <= 0) return '0 Bytes';
 
   const k = 1024;
   const sizes = ['Bytes', 'KB', 'MB', 'GB'];
@@ -174,27 +159,3 @@ export function formatFileSize(bytes: number): string {
   return Math.round((bytes / Math.pow(k, i)) * 100) / 100 + ' ' + sizes[i];
 }
 
-export function calculateSavings(originalSize: number, compressedSize: number): number {
-  if (originalSize === 0) return 0;
-  return Math.round(((originalSize - compressedSize) / originalSize) * 100);
-}
-
-export function getSavingsColor(savings: number): string {
-  if (savings >= 50) return 'text-green-600';
-  if (savings >= 30) return 'text-blue-600';
-  return 'text-gray-600';
-}
-
-export function getSavingsBgColor(savings: number): string {
-  if (savings >= 50) return 'bg-green-100';
-  if (savings >= 30) return 'bg-blue-100';
-  return 'bg-gray-100';
-}
-
-export function createObjectURL(blob: Blob): string {
-  return URL.createObjectURL(blob);
-}
-
-export function revokeObjectURL(url: string): void {
-  URL.revokeObjectURL(url);
-}
